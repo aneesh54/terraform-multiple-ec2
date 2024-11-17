@@ -1,0 +1,47 @@
+# AWS Providers for multiple regions
+provider "aws" {
+  alias  = "us_east_1"
+  region = "us-east-1"
+}
+
+provider "aws" {
+  alias  = "us_west_2"
+  region = "us-west-2"
+}
+
+# Variable declaration for instance type
+variable "instance_type" {
+  default     = "t2.micro"
+  description = "The type of instance to create"
+}
+
+# Variable declarations for AMI IDs
+variable "ami_id_us_east_1" {
+  default     = "ami-012967cc5a8c9f891" # Replace with valid AMI ID for us-east-1
+  description = "AMI ID for us-east-1 region"
+}
+
+variable "ami_id_us_west_2" {
+  default     = "ami-046b5b8111c19b3ac" # Replace with valid AMI ID for us-west-2
+  description = "AMI ID for us-west-2 region"
+}
+
+# Resource: EC2 instance in us-east-1
+resource "aws_instance" "ec2_us_east_1" {
+  provider      = aws.us_east_1
+  ami           = var.ami_id_us_east_1
+  instance_type = var.instance_type
+  tags = {
+    Name = "EC2-East"
+  }
+}
+
+# Resource: EC2 instance in us-west-2
+resource "aws_instance" "ec2_us_west_2" {
+  provider      = aws.us_west_2
+  ami           = var.ami_id_us_west_2
+  instance_type = var.instance_type
+  tags = {
+    Name = "EC2-West"
+  }
+}
